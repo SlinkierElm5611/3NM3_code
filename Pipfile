@@ -1,5 +1,8 @@
 [packages]
 numpy = "*"
 scipy = "*"
+sympy = "*"
 matplotlib = "*"
+[dev-packages]
 black = "*"
+pylint = "*"
