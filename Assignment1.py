@@ -52,5 +52,29 @@ def problem1() -> None:
     """
 
 
+# Problem 2
+def problem2() -> None:
+    """
+    a) Write the linear system for P__i
+    b) Solve for P__i using decomposition and back substitution
+    c) Double the loads (18 kN and 12 kN) and solve for P__i again without refactoring the matrix
+    """
+    # Part a
+    # sin(45)*P5 -12 = 0
+    # P2 + sin(45)*P5 = 0
+    # P4 + sin(45)*P5 = 0
+    # P6 + sin(45)*P5 = 0
+    # sin(45)*P3 + P4 -18 = 0
+    # sin(45)*P3 + P1 + P2 = 0
+
+    # Part b
+    A = np.array([[0, 0, 0, 0, np.sin(np.pi/4), 0],
+                  [0, 1, 0, 0, np.sin(np.pi/4), 0],
+                  [0, 0, 0, 1, np.sin(np.pi/4), 0],
+                  [0, 0, 0, 0, np.sin(np.pi/4), 1],
+                  [0, 0, np.sin(np.pi/4), 1, 0, 0],
+                  [1, 1, np.sin(np.pi/4), 0, 0, 0]])
+    b = np.array([12, 0, 0, 0, 18, 0])
+
 if __name__ == "__main__":
     problem1()
