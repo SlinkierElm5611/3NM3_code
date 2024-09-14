@@ -46,7 +46,9 @@ def problem1() -> None:
     What can be observed from the resulting graph and the printed time values is that
     the sparse solver is significantly less computationally expensive than the dense solver
     for large values of N. However, it has a higher constant cost for very small values of N resulting in 
-    significantly slower performance at lower N values.
+    significantly slower performance at lower N values. This behaviour is similar to what is seen
+    in hash tables, where the constant cost of hashing the key is on average higher than the time it takes to
+    search through a list of small N values(usually 7 in the case of hash tables and stack array iteration).
     """
 
 
