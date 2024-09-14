@@ -104,5 +104,30 @@ def problem2() -> None:
     print(f"Solution for P__i with doubled loads: {x}")
 
 
+# Problem 3
+def problem3() -> None:
+    """
+    Given matrix A = [[1, 2], [3, 4]]
+    a) Calculate the condition number of A
+    b) Let's use a preconditioner matrix  P  to improve the condition number of the product  P−1A .
+       Give 2 examples of  P  that improve the condition number, one of which being the 'perfect' preconditioner.
+    """
+    A = np.array([[1, 2], [3, 4]])
+    # Part a
+    condition_number = lambda x: np.linalg.norm(x)*np.linalg.norm(np.linalg.inv(x))
+    print(f"Condition number of A: {condition_number(A)}")
+    # Part b
+    # Example 1: P = [[1, 0], [0, 1]]
+    # This is the perfect preconditioner as it is the identity matrix.
+    # Example 2: P = [[1, 0], [0, 0]]
+    # This preconditioner will make the matrix singular and therefore improve the condition number.
+    P__1 = np.array([[1, 0], [0, 1]])
+    B = np.linalg.inv(P__1)@A
+    print(f"Condition number of P__1A: {condition_number(B)}")
+    P__2 = np.array([[1, 0], [0, 0]])
+    B = np.linalg.inv(P__2)@A
+    print(f"Condition number of P__2A: {condition_number(B)}")
+
+
 if __name__ == "__main__":
-    problem2()
+    problem3()
