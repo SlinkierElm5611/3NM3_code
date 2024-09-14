@@ -68,13 +68,24 @@ def problem2() -> None:
     # sin(45)*P3 + P1 + P2 = 0
 
     # Part b
-    A = np.array([[0, 0, 0, 0, np.sin(np.pi/4), 0],
+    A = np.array([[1, 1, np.sin(np.pi/4), 0, 0, 0],
                   [0, 1, 0, 0, np.sin(np.pi/4), 0],
-                  [0, 0, 0, 1, np.sin(np.pi/4), 0],
-                  [0, 0, 0, 0, np.sin(np.pi/4), 1],
                   [0, 0, np.sin(np.pi/4), 1, 0, 0],
-                  [1, 1, np.sin(np.pi/4), 0, 0, 0]])
-    b = np.array([12, 0, 0, 0, 18, 0])
+                  [0, 0, 0, 1, np.sin(np.pi/4), 0],
+                  [0, 0, 0, 0, np.sin(np.pi/4), 0],
+                  [0, 0, 0, 0, np.sin(np.pi/4), 1]])
+    b = np.array([0, 0, 18, 0, 12, 0])
+    L = np.zeros((6, 6))
+    np.fill_diagonal(L, 1)
+    # U is initialized as a copy of A to allow us to write inplace and make algorithm more efficient
+    U = A.copy()
+    for i in range(A.diagonal().size):
+        for j in range(i+1, A.diagonal().size):
+            L[j, i] = U[j, i]/U[i, i]
+            U[j] -= L[j, i]*U[i]
+    print(f"L matrix: {L}")
+    print(f"U matrix: {U}")
+
 
 if __name__ == "__main__":
-    problem1()
+    problem2()
