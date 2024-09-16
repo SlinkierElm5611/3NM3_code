@@ -78,7 +78,9 @@ def problem2() -> None:
     ])
 
     b = np.array([0, 0, 18, 0, 12, 0])
+    # LU decomposition
     P, L, U = sp.linalg.lu(A)
+    # Back substitution
     y = sp.linalg.solve(L, b)
     x = sp.linalg.solve(U, y)
     print(f"Solution for P__i: {x}")
@@ -104,7 +106,7 @@ def problem3() -> None:
     # Example 1: P = [[1, 2], [3, 4]]
     # This is the perfect preconditioner as it's inverse multiplied by A will result in the identity matrix.
     # Example 2: P = [[1, 0], [0, 4]]
-    # This preconditioner will make the matrix singular and therefore improve the condition number.
+    # This preconditioner will slightly decrease the condition number as it is the diagonal of A, known Jacobi preconditioner.
     B = np.linalg.inv(A)@A
     print(f"Condition number of P__1A: {np.linalg.cond(B)}")
     P__2 = np.array([[1, 0], [0, 4]])
