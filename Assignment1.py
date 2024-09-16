@@ -61,19 +61,22 @@ def problem2() -> None:
     """
     # Part a
     # sin(45)*P5 -12 = 0
-    # P2 + sin(45)*P5 = 0
-    # P4 + sin(45)*P5 = 0
-    # P6 + sin(45)*P5 = 0
+    # -P2 - sin(45)*P5 = 0
+    # -P4 - sin(45)*P5 = 0
+    # -P6 + sin(45)*P5 = 0
     # sin(45)*P3 + P4 -18 = 0
-    # sin(45)*P3 + P1 + P2 = 0
+    # -sin(45)*P3 - P1 + P2 = 0
 
     # Part b
-    A = np.array([[-1, 1, np.sin(np.pi/4), 0, 0, 0],
-                  [0, -1, 0, 0, 0-np.sin(np.pi/4), 0],
-                  [0, 0, np.sin(np.pi/4), 1, 0, 0],
-                  [0, 0, 0, -1, np.sin(np.pi/4), 0],
-                  [0, 0, 0, 0, np.sin(np.pi/4), 0],
-                  [0, 0, 0, 0, np.sin(np.pi/4), -1]])
+    A = np.array([
+      [-1, 1, -1/np.sqrt(2), 0, 0, 0],
+      [0, -1, 0, 0, -1/np.sqrt(2), 0],
+      [0, 0, 1/np.sqrt(2), 1, 0, 0],
+      [0, 0, 0, -1, -1/np.sqrt(2), 0],
+      [0, 0, 0, 0, 1/np.sqrt(2), 0],
+      [0, 0, 0, 0, 1/np.sqrt(2), -1]
+    ])
+
     b = np.array([0, 0, 18, 0, 12, 0])
     P, L, U = sp.linalg.lu(A)
     y = sp.linalg.solve(L, b)
