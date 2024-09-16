@@ -68,39 +68,21 @@ def problem2() -> None:
     # sin(45)*P3 + P1 + P2 = 0
 
     # Part b
-    A = np.array([[1, 1, np.sin(np.pi/4), 0, 0, 0],
-                  [0, 1, 0, 0, np.sin(np.pi/4), 0],
+    A = np.array([[-1, 1, np.sin(np.pi/4), 0, 0, 0],
+                  [0, -1, 0, 0, 0-np.sin(np.pi/4), 0],
                   [0, 0, np.sin(np.pi/4), 1, 0, 0],
-                  [0, 0, 0, 1, np.sin(np.pi/4), 0],
+                  [0, 0, 0, -1, np.sin(np.pi/4), 0],
                   [0, 0, 0, 0, np.sin(np.pi/4), 0],
-                  [0, 0, 0, 0, np.sin(np.pi/4), 1]])
+                  [0, 0, 0, 0, np.sin(np.pi/4), -1]])
     b = np.array([0, 0, 18, 0, 12, 0])
-    L = np.zeros((6, 6))
-    np.fill_diagonal(L, 1)
-    # U is initialized as a copy of A to allow us to write inplace and make algorithm more efficient
-    U = A.copy()
-    for i in range(A.diagonal().size):
-        for j in range(i+1, A.diagonal().size):
-            L[j, i] = U[j, i]/U[i, i]
-            U[j] -= L[j, i]*U[i]
-    print(f"L matrix: {L}")
-    print(f"U matrix: {U}")
-    # Back substitution
-    def back_sub(B: np.array) -> np.array:
-        y = np.zeros(6)
-        x = np.zeros(6)
-        y[0] = b[0]
-        for i in range(1, 6):
-            y[i] = b[i] - np.dot(L[i], y)
-        x[5] = y[5]/U[5, 5]
-        for i in range(4, -1, -1):
-            x[i] = (y[i] - np.dot(U[i, i+1:], x[i+1:]))/U[i, i]
-        return x
-    x = back_sub(b)
+    P, L, U = sp.linalg.lu(A)
+    y = sp.linalg.solve(L, b)
+    x = sp.linalg.solve(U, y)
     print(f"Solution for P__i: {x}")
     # Part c
     b = np.array([0, 0, 36, 0, 24, 0])
-    x = back_sub(b)
+    y = sp.linalg.solve(L, b)
+    x = sp.linalg.solve(U, y)
     print(f"Solution for P__i with doubled loads: {x}")
 
 
@@ -130,4 +112,6 @@ def problem3() -> None:
 
 
 if __name__ == "__main__":
-    problem3()
+    #problem1()
+    problem2()
+    #problem3()
