@@ -99,22 +99,20 @@ def problem3() -> None:
     """
     A = np.array([[1, 2], [3, 4]])
     # Part a
-    condition_number = lambda x: np.linalg.norm(x)*np.linalg.norm(np.linalg.inv(x))
-    print(f"Condition number of A: {condition_number(A)}")
+    print(f"Condition number of A: {np.linalg.cond(A)}")
     # Part b
-    # Example 1: P = [[1, 0], [0, 1]]
-    # This is the perfect preconditioner as it is the identity matrix.
-    # Example 2: P = [[1, 0], [0, 0]]
+    # Example 1: P = [[1, 2], [3, 4]]
+    # This is the perfect preconditioner as it's inverse multiplied by A will result in the identity matrix.
+    # Example 2: P = [[1, 0], [0, 4]]
     # This preconditioner will make the matrix singular and therefore improve the condition number.
-    P__1 = np.array([[1, 0], [0, 1]])
-    B = np.linalg.inv(P__1)@A
-    print(f"Condition number of P__1A: {condition_number(B)}")
-    P__2 = np.array([[1, 0], [0, 0]])
+    B = np.linalg.inv(A)@A
+    print(f"Condition number of P__1A: {np.linalg.cond(B)}")
+    P__2 = np.array([[1, 0], [0, 4]])
     B = np.linalg.inv(P__2)@A
-    print(f"Condition number of P__2A: {condition_number(B)}")
+    print(f"Condition number of P__2A: {np.linalg.cond(B)}")
 
 
 if __name__ == "__main__":
-    #problem1()
+    problem1()
     problem2()
-    #problem3()
+    problem3()
