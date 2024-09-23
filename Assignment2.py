@@ -4,21 +4,6 @@ from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import gmres, splu, LinearOperator
 import matplotlib.pyplot as plt
 
-def gauss_seidel(A, b, x0, tolerance=1e-4, max_iterations=1000):
-    x = x0.copy()
-    n = len(x)
-    iteration = 1
-    for i in range(max_iterations):
-        x_prev = x.copy()
-        for j in range(n):
-            sum1 = sum(A[j][k] * x[k] for k in range(j))
-            sum2 = sum(A[j][k] * x_prev[k] for k in range(j + 1, n))
-            x[j] = (b[j] - sum1 - sum2) / A[j][j]
-            iteration += 1
-        if np.linalg.norm(x - x_prev) < tolerance:
-            return x, i + 1
-    return x, iteration
-
 def Problem1():
     """
     Assuming that the distance from left end of system to right end is 6M
@@ -29,6 +14,21 @@ def Problem1():
     (x__5 - x__4) * 3000 - (x__4 - x__3) * 3000 - 60 = 0
     (0    - x__5) * 2000 - (x__5 - x__4) * 3000 = 0
     """
+    def gauss_seidel(A, b, x0, tolerance=1e-4, max_iterations=1000):
+        x = x0.copy()
+        n = len(x)
+        iteration = 1
+        for i in range(max_iterations):
+            x_prev = x.copy()
+            for j in range(n):
+                sum1 = sum(A[j][k] * x[k] for k in range(j))
+                sum2 = sum(A[j][k] * x_prev[k] for k in range(j + 1, n))
+                x[j] = (b[j] - sum1 - sum2) / A[j][j]
+                iteration += 1
+            if np.linalg.norm(x - x_prev) < tolerance:
+                return x, i + 1
+        return x, iteration
+
     A = np.array([
         [-5000, 3000, 0, 0, 0],
         [3000, -6000, 3000, 0, 0],
@@ -114,7 +114,7 @@ def Problem2():
         plt.title("Temperature Distribution in the Nuclear Fuel Square Bar")
         plt.show()
     computeTemperature(100) #Part a
-    computeTemperature(50) #Part b
+    computeTemperature(50) #Part b half mesh check
     #Part A and part b show the same results even though 
 
 if __name__ == "__main__":
