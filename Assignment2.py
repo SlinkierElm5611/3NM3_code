@@ -59,73 +59,56 @@ def Problem2():
     Use an iterative method and comment on the effectiveness of an ILU
     preconditioner.
     """
-# Parameters
     def computeTemperature(n):
         L = 1.0  # length of the square bar (1 meter)
         k = 2.0  # thermal conductivity (W/m^2)
         Q = 1000.0  # heat generation (W/m^3)
         T_boundary = 100.0  # boundary temperature (°C)
 
-# Mesh spacing
         dx = L / (n - 1)
 
-# Number of grid points (n * n) for the matrix system
         N = n * n
 
-# Create sparse matrix A in lil_matrix format for efficient construction
         A = lil_matrix((N, N))
         B = np.zeros(N)
 
-# Function to map 2D grid index (i, j) to 1D vector index
         def index(i, j):
             return i * n + j
 
-# Construct the system of equations
         for i in range(n):
             for j in range(n):
                 idx = index(i, j)
 
                 if i == 0 or i == n-1 or j == 0 or j == n-1:
-                    # Boundary condition: T = T_boundary
                     A[idx, idx] = 1
                     B[idx] = T_boundary
                 else:
-                    # Interior points
                     A[idx, index(i+1, j)] = 1  # T(i+1, j)
                     A[idx, index(i-1, j)] = 1  # T(i-1, j)
                     A[idx, index(i, j+1)] = 1  # T(i, j+1)
                     A[idx, index(i, j-1)] = 1  # T(i, j-1)
                     A[idx, idx] = -4  # T(i, j)
 
-                    # Right-hand side for heat generation
                     B[idx] = -Q * dx**2 / k
 
-# Convert the matrix A to CSR format for efficient arithmetic and solve
         A = A.tocsr()
 
-# Perform LU decomposition
         lu = splu(A)
 
-# Define the preconditioner for GMRES
         M_x = LinearOperator(A.shape, matvec=lu.solve)
 
-# Solve using GMRES with LU preconditioner
         T, exitCode = gmres(A, B, M=M_x, atol=1e-6, rtol=1e-6)
 
-# Check if GMRES converged
         if exitCode == 0:
             print("GMRES converged successfully with LU preconditioner.")
         else:
             print(f"GMRES failed to converge. Exit code: {exitCode}")
 
-# Reshape the solution vector T back into a 2D grid
         T_grid = T.reshape((n, n))
 
-# Get the maximum temperature in the grid
         max_temperature = np.max(T_grid)
         print(f"Maximum temperature in the system: {max_temperature:.2f} °C")
 
-# Plot the temperature distribution
         plt.imshow(T_grid, cmap='hot', interpolation='nearest')
         plt.colorbar(label="Temperature (°C)")
         plt.title("Temperature Distribution in the Nuclear Fuel Square Bar")
