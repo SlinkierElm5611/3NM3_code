@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def gauss_seidel(A, b, x0, tolerance=1e-4, max_iterations=1000):
     x = x0.copy()
@@ -17,12 +18,13 @@ def gauss_seidel(A, b, x0, tolerance=1e-4, max_iterations=1000):
 
 def Problem1():
     """
+    Assuming that the distance from left end of system to right end is 6M
     Part a) Write out equilibrium equations for the positions of the blokcs and form a linear system.
     80    - x__1  * 2000 + (x__2 - x__1) * 3000 = 0
     (x__3 - x__2) * 3000 - (x__2 - x__1) * 3000 = 0
     (x__4 - x__3) * 3000 - (x__3 - x__2) * 3000 = 0
     (x__5 - x__4) * 3000 - (x__4 - x__3) * 3000 - 60 = 0
-    (6    - x__5) * 2000 - (x__5 - x__4) * 3000 = 0
+    (0    - x__5) * 2000 - (x__5 - x__4) * 3000 = 0
     """
     A = np.array([
         [-5000, 3000, 0, 0, 0],
@@ -31,7 +33,7 @@ def Problem1():
         [0, 0, 3000, -6000, 3000],
         [0, 0, 0, 3000, -5000]
         ])
-    b = np.array([-80, 0, 0, 60, -12000])
+    b = np.array([-80, 0, 0, 60, 0])
     """
     Part b) Use Gauss-Seidel iterations to solve this system. Use an absolute tolerance on the residual's Frobenius norm of 1e-4 to determine convergence. Report the solution and the number of iterations required.
     """
@@ -46,8 +48,15 @@ def Problen2():
 
     Reminder: The steady-state heat transport equation is:  −∇⋅[−𝑘∇𝑇]=−𝑄
 
-    Part a) Discretize the problem with a 100x100 mesh and find the maximum temperature in steady state.
+    Part a) Discretize the problem with a 100x100 mesh and find the maximum
+    temperature in steady state.
+    Part b) Ideally, your solution will be independant of your mesh size.
+    Conduct a mesh sensativity analysis (which means to halve the mesh size and
+    rerun) to check if your solution depend on your discretization.
+    Use an iterative method and comment on the effectiveness of an ILU
+    preconditioner.
     """
+
 
 if __name__ == "__main__":
     Problem1()
