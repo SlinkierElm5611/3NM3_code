@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.sparse import lil_matrix
-from scipy.sparse.linalg import gmres, splu, LinearOperator
+from scipy.sparse import lil_matrix, coo_matrix
+from scipy.sparse.linalg import gmres, splu, spilu, LinearOperator
 import matplotlib.pyplot as plt
 
 def Problem1():
@@ -59,7 +59,7 @@ def Problem2():
     Use an iterative method and comment on the effectiveness of an ILU
     preconditioner.
     """
-    def computeTemperature(n):
+    def computeTemperature(n, precondition):
         L = 1.0  # length of the square bar (1 meter)
         k = 2.0  # thermal conductivity (W/m^2)
         Q = 1000.0  # heat generation (W/m^3)
@@ -93,16 +93,12 @@ def Problem2():
 
         A = A.tocsr()
 
-        lu = splu(A)
+        ilu =precondition(A) 
 
-        M_x = LinearOperator(A.shape, matvec=lu.solve)
+        M_x = LinearOperator(A.shape, matvec=ilu.solve)
 
         T, exitCode = gmres(A, B, M=M_x, atol=1e-6, rtol=1e-6)
 
-        if exitCode == 0:
-            print("GMRES converged successfully with LU preconditioner.")
-        else:
-            print(f"GMRES failed to converge. Exit code: {exitCode}")
 
         T_grid = T.reshape((n, n))
 
@@ -113,9 +109,13 @@ def Problem2():
         plt.colorbar(label="Temperature (°C)")
         plt.title("Temperature Distribution in the Nuclear Fuel Square Bar")
         plt.show()
-    computeTemperature(100) #Part a
-    computeTemperature(50) #Part b half mesh check
-    #Part A and part b show the same results even though 
+    print("Using SPLU preconditioner (no precondition)")
+    computeTemperature(100, splu) #Part a
+    computeTemperature(50, splu) #Part b half mesh check
+    ##Part A and part b show the same results even though 
+    print("Using SPILU preconditioner")
+    computeTemperature(50, spilu)
+    #the result shows no significant difference between using ilu preconditioning and not using it.
 
 if __name__ == "__main__":
     Problem1()
