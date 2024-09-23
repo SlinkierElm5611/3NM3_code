@@ -45,7 +45,7 @@ def Problem1():
     print("Number of iterations: ", iterations)
     print("Numpy solution: ", np.linalg.solve(A, b))
 
-def Problen2():
+def Problem2():
     """
     You have a new nuclear fuel type which is an infinite square bar, 1m in edge length. Its thermal conducitivity is  𝑘=2𝑊/𝑚2 . During irradiation, it generate fission heat  𝑄=1𝑘𝑊/𝑚3  and is cooled with heat pipes which keep the surface temperature exactly  100 0𝐶 .
 
@@ -60,77 +60,80 @@ def Problen2():
     preconditioner.
     """
 # Parameters
-    L = 1.0  # length of the square bar (1 meter)
-    n = 100  # number of mesh points along each axis (100x100 mesh)
-    k = 2.0  # thermal conductivity (W/m^2)
-    Q = 1000.0  # heat generation (W/m^3)
-    T_boundary = 100.0  # boundary temperature (°C)
+    def computeTemperature(n):
+        L = 1.0  # length of the square bar (1 meter)
+        k = 2.0  # thermal conductivity (W/m^2)
+        Q = 1000.0  # heat generation (W/m^3)
+        T_boundary = 100.0  # boundary temperature (°C)
 
 # Mesh spacing
-    dx = L / (n - 1)
+        dx = L / (n - 1)
 
 # Number of grid points (n * n) for the matrix system
-    N = n * n
+        N = n * n
 
 # Create sparse matrix A in lil_matrix format for efficient construction
-    A = lil_matrix((N, N))
-    B = np.zeros(N)
+        A = lil_matrix((N, N))
+        B = np.zeros(N)
 
 # Function to map 2D grid index (i, j) to 1D vector index
-    def index(i, j):
-        return i * n + j
+        def index(i, j):
+            return i * n + j
 
 # Construct the system of equations
-    for i in range(n):
-        for j in range(n):
-            idx = index(i, j)
+        for i in range(n):
+            for j in range(n):
+                idx = index(i, j)
 
-            if i == 0 or i == n-1 or j == 0 or j == n-1:
-                # Boundary condition: T = T_boundary
-                A[idx, idx] = 1
-                B[idx] = T_boundary
-            else:
-                # Interior points
-                A[idx, index(i+1, j)] = 1  # T(i+1, j)
-                A[idx, index(i-1, j)] = 1  # T(i-1, j)
-                A[idx, index(i, j+1)] = 1  # T(i, j+1)
-                A[idx, index(i, j-1)] = 1  # T(i, j-1)
-                A[idx, idx] = -4  # T(i, j)
+                if i == 0 or i == n-1 or j == 0 or j == n-1:
+                    # Boundary condition: T = T_boundary
+                    A[idx, idx] = 1
+                    B[idx] = T_boundary
+                else:
+                    # Interior points
+                    A[idx, index(i+1, j)] = 1  # T(i+1, j)
+                    A[idx, index(i-1, j)] = 1  # T(i-1, j)
+                    A[idx, index(i, j+1)] = 1  # T(i, j+1)
+                    A[idx, index(i, j-1)] = 1  # T(i, j-1)
+                    A[idx, idx] = -4  # T(i, j)
 
-                # Right-hand side for heat generation
-                B[idx] = -Q * dx**2 / k
+                    # Right-hand side for heat generation
+                    B[idx] = -Q * dx**2 / k
 
 # Convert the matrix A to CSR format for efficient arithmetic and solve
-    A = A.tocsr()
+        A = A.tocsr()
 
 # Perform LU decomposition
-    lu = splu(A)
+        lu = splu(A)
 
 # Define the preconditioner for GMRES
-    M_x = LinearOperator(A.shape, matvec=lu.solve)
+        M_x = LinearOperator(A.shape, matvec=lu.solve)
 
 # Solve using GMRES with LU preconditioner
-    T, exitCode = gmres(A, B, M=M_x, atol=1e-6, rtol=1e-6)
+        T, exitCode = gmres(A, B, M=M_x, atol=1e-6, rtol=1e-6)
 
 # Check if GMRES converged
-    if exitCode == 0:
-        print("GMRES converged successfully with LU preconditioner.")
-    else:
-        print(f"GMRES failed to converge. Exit code: {exitCode}")
+        if exitCode == 0:
+            print("GMRES converged successfully with LU preconditioner.")
+        else:
+            print(f"GMRES failed to converge. Exit code: {exitCode}")
 
 # Reshape the solution vector T back into a 2D grid
-    T_grid = T.reshape((n, n))
+        T_grid = T.reshape((n, n))
 
 # Get the maximum temperature in the grid
-    max_temperature = np.max(T_grid)
-    print(f"Maximum temperature in the system: {max_temperature:.2f} °C")
+        max_temperature = np.max(T_grid)
+        print(f"Maximum temperature in the system: {max_temperature:.2f} °C")
 
 # Plot the temperature distribution
-    plt.imshow(T_grid, cmap='hot', interpolation='nearest')
-    plt.colorbar(label="Temperature (°C)")
-    plt.title("Temperature Distribution in the Nuclear Fuel Square Bar")
-    plt.show()
+        plt.imshow(T_grid, cmap='hot', interpolation='nearest')
+        plt.colorbar(label="Temperature (°C)")
+        plt.title("Temperature Distribution in the Nuclear Fuel Square Bar")
+        plt.show()
+    computeTemperature(100) #Part a
+    computeTemperature(50) #Part b
+    #Part A and part b show the same results even though 
 
 if __name__ == "__main__":
     Problem1()
-    Problen2()
+    Problem2()
