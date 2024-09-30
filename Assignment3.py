@@ -85,7 +85,56 @@ def Problem2():
     [10.00, 517.06, 483.20, 476.73, 512.16, 500.64]
     ])
     #a)Determine the best cubic polynomial fit to this data with the uncertainty
+    x = d[:,0]
+    y_values = d[:,1:]
+    y_mean = np.mean(y_values, axis=1)
+    y_std = np.std(y_values, axis=1, ddof=1)
+    weights = 1/y_std**2
+    coeffs, cov = np.polyfit(x, y_mean, deg=3, w=weights, cov=True)
+    p = np.poly1d(coeffs)
+    coeffs_std = np.sqrt(np.diag(cov))
+    print("Coefficients for cubic polynomial fit: ", coeffs)
+    print("Standard deviations for coefficients: ", coeffs_std)
     #b) Your manager thinks this should be a quadratic. Which do you think it should be and why?
+    coeefs_quad, cov_quad = np.polyfit(x, y_mean, deg=2, w=weights, cov=True)
+    p_quad = np.poly1d(coeefs_quad)
+    coeffs_std_quad = np.sqrt(np.diag(cov_quad))
+    print("Coefficients for quadratic polynomial fit: ", coeefs_quad)
+    print("Standard deviations for coefficients: ", coeffs_std_quad)
+
+    x_fit = np.linspace(min(x), max(x), 200)
+    y_fit = p(x_fit)
+    y_fit_quad = p_quad(x_fit)
+
+    rss_cubic = np.sum(((y_mean - p(x)) * weights)**2)
+    rss_quad = np.sum(((y_mean - p_quad(x)) * weights)**2)
+
+    def adjusted_r_squared(y_obs, y_pred, p):
+        n = len(y_obs)
+        residual = y_obs - y_pred
+        ss_res = np.sum(residual**2)
+        ss_tot = np.sum((y_obs - np.mean(y_obs))**2)
+        r2 = 1 - (ss_res / ss_tot)
+        r2_adj = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+        return r2_adj
+
+    r2_adj_cubic = adjusted_r_squared(y_mean, p(x), 3)
+    r2_adj_quad = adjusted_r_squared(y_mean, p_quad(x), 2)
+
+    print(f"\nComparison Metrics:")
+    print(f"Cubic Model RSS: {rss_cubic:.2f}, Adjusted R²: {r2_adj_cubic:.4f}")
+    print(f"Quadratic Model RSS: {rss_quad:.2f}, Adjusted R²: {r2_adj_quad:.4f}")
+
+    plt.figure(figsize=(10, 6))
+    plt.errorbar(x, y_mean, yerr=y_std, fmt='o', label='Experimental Data', capsize=5)
+    plt.plot(x_fit, y_fit, 'r-', label='Cubic Fit')
+    plt.plot(x_fit, y_fit_quad, 'g--', label='Quadratic Fit')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Polynomial Fits to Experimental Data')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
     Problem1()
