@@ -26,8 +26,8 @@ def Problem1():
             [df2_dlambda, 1]   # df2/ds is always 1
         ])
 
-    def newton_raphson(x0, tolerance=1e-6, max_iterations=100):
-        x = x0
+    def newton_raphson(x__0, tolerance=1e-6, max_iterations=100):
+        x = x__0
         for iteration in range(max_iterations):
             f_x = f(x)
             residual = np.linalg.norm(f_x)
@@ -46,8 +46,8 @@ def Problem1():
         print("No solution found within the maximum number of iterations.")
 
     #initial guess
-    x0 = np.array([0.01,L])
-    solution = newton_raphson(x0)
+    x__0 = np.array([0.01,L])
+    solution = newton_raphson(x__0)
 
     if solution is not None:
         lambda_val, s = solution
@@ -79,8 +79,8 @@ def Problem2():
             [2* x, 2 * (y - 3)]
         ])
 
-    def newton_raphson(x0, tol=1e-6, max_iter=100):
-        x = x0
+    def newton_raphson(x__0, tol=1e-6, max_iter=100):
+        x = x__0
         for _ in range(max_iter):
             f_x = f(x)
             if np.linalg.norm(f_x) < tol:
@@ -113,10 +113,10 @@ def Problem2():
 
     if len(distinct_solutions) == 2:
         print(f"Two distinct solutions found: {distinct_solutions}")
-        x1, y1 = distinct_solutions[0]
-        x2, y2 = distinct_solutions[1]
-        print(f"x1 = {x1:.6f}, y1 = {y1:.6f}")
-        print(f"x2 = {x2:.6f}, y2 = {y2:.6f}")
+        x__1, y__1 = distinct_solutions[0]
+        x__2, y__2 = distinct_solutions[1]
+        print(f"x__1 = {x__1:.6f}, y__1 = {y__1:.6f}")
+        print(f"x__2 = {x__2:.6f}, y__2 = {y__2:.6f}")
     else:
         print("No two distinct solutions found.")
 
