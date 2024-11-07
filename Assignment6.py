@@ -75,6 +75,21 @@ def Problem2():
         print("A: ", A)
         print("B: ", B)
 
+def Problem3():
+    """
+    Given a cubic function f(x) with:
+        integral from -1 to 1 of f(x)dx = 3
+        and f(-3^(-1/2)) = 1
+    what is the value of f(3^(-1/2))?
+    Why?
+    Using the 2-point Gauss-Legendre formula: I = c1*f(x1) + c2*f(x2)
+    I = c1*f(x1) + c2*f(x2) = integral from -1 to 1 of f(x)dx
+    I = c1*f(x1) + c2*f(x2) = 3
+    c1*f(x1) = f(-3^(-1/2))
+    therefore f(3^(-1/2)) = 3-f(-3^(-1/2)) = 3-1 = 2
+    """
+    pass
+
 if __name__ == "__main__":
     #Problem1()
     Problem2()
