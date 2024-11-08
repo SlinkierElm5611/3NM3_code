@@ -44,8 +44,14 @@ def Problem1():
 
     """
     c) Write the Finite Difference formula if lambda = 2 + T/300
-
+    d/dx*(lambda*dT/dx)  = -q
+    d/dx*(2+T/300*dT/dx) = -q
+    1/300*dT/dx + d^2T/dx^2 = -q
+    (T__i+1 - T__i-1) / 2h + (T__i+1 - 2T__i + T__i-1) / h^2 = -q
+    T__i+1^2 - 2T__i*T__i+1 + 2T__i*T__i-1 - T__i-1^2 + 600h^3*q = 0
+    R(T) = 0
     """
+    #d) Solve for T with the temperature dependent thermal conductivity
 
 def Problem2():
     """
