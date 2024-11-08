@@ -10,21 +10,42 @@ def Problem1():
     a) Write the finite difference scheme for Fourier heat balance equation.
     T__0 = 300
     T__n-1 = 300
-    T__i+1 - 2T__i + T__i-1 = -q * dx**2 / lambda
-    b) Assuming q = 1kW/m^3, lambda = 2 mW/mK, and dx = 10um, use the finite difference to find a solution.
+    T__i+1 - 2T__i + T__i-1 = -h^2 * q / lambda
+    This becomes the following matrix equation:
     """
-    # b)
-    q = 1e3 # W/m^3
-    lambda_ = 2e-3 # mW/mK
-    dx = 10e-6 # m
-    n = 1e-3 / dx
-    T = np.zeros(n)
-    T[0] = 300
-    T[-1] = 300
-    for i in range(1, n-1):
-        T[i] = (T[i+1] + T[i-1] + q * dx**2 / lambda_) / 2
-    plt.plot(T)
+    def generateA(n):
+        A = np.zeros((n+1, n+1))
+        A[0, 0] = 1
+        A[n, n] = 1
+        for i in range(1,n):
+            A[i, i] = -2
+            A[i, i-1] = 1
+            A[i, i+1] = 1
+        return A
+    def generateb(n, h, q, lam, boundary=300):
+        b = np.zeros(n+1)
+        b[0] = boundary
+        b[1:-1] = -h**2 * q / lam
+        b[-1] = boundary
+        return b
+    d__0 = 0
+    d__1 = 1e-3
+    Q = 1e3
+    lam = 2e-3
+    h = 10e-6
+    n = 100
+    boundary = 300
+    A = generateA(n)
+    b = generateb(n, h, Q, lam, boundary)
+    T = np.linalg.solve(A, b)
+    d = np.linspace(d__0, d__1, n+1)
+    plt.plot(d, T)
     plt.show()
+
+    """
+    c) Write the Finite Difference formula if lambda = 2 + T/300
+
+    """
 
 def Problem2():
     """
@@ -91,5 +112,5 @@ def Problem3():
     pass
 
 if __name__ == "__main__":
-    #Problem1()
+    Problem1()
     Problem2()
