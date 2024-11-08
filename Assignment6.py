@@ -51,20 +51,6 @@ def Problem1():
     T__i+1^2 - 2T__i*T__i+1 + 2T__i*T__i-1 - T__i-1^2 + 600h^3*q = 0
     R(T) = 0
     """
-    #d) Solve for T with the temperature dependent thermal conductivity
-    #note: Some code reused from lecture slides
-    def residual(T, n, h, boundary=300):
-        r = np.zeros(n+1)
-        r[0] = T[0] - boundary
-        r[-1] = T[-1] - boundary
-        for i in range(1, n):
-            r[i] = T[i + 1]**2 - 2 * T[i] * T[i + 1] + 2 * T[i] * T[i - 1] - T[i - 1]**2 + 600 * Q * h**3
-            return r
-    T0 = np.full(n+1, boundary)
-    solution = sp.optimize.root(residual, T0, args=(n, h))
-    T = solution.x
-    plt.plot(d, T)
-    plt.show()
 
 def Problem2():
     """
